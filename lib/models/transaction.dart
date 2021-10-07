@@ -1,5 +1,5 @@
 class TransactionModel {
-  final String id;
+  String id;
   final String title;
   final double amount;
   final DateTime date;
