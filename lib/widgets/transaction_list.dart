@@ -8,43 +8,42 @@ class TransactionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
+    return Container(
         height: 700,
-        child: Column(
-          children: userTransactions.map((t) =>
-              Card(
-                child: Container(
-                  padding: EdgeInsets.all(16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.symmetric(vertical: 4),
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.deepPurple,width:2 ,),borderRadius: BorderRadius.circular(8)
-                        ),
-                        child:
-                        Text(
-                          '\$ ${t.amount}',
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20,color: Colors.deepPurpleAccent ),
-                        ),
+        child: ListView.builder(
+          itemBuilder: (ctx, index) {
+            return Card(
+              child: Container(
+                padding: EdgeInsets.all(16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 4),
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Theme.of(context).primaryColor,width:2 ,),borderRadius: BorderRadius.circular(8)
                       ),
-                      Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(t.title,style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
-                            Text(DateFormat('dd-MM-yyyy hh:mm').format(t.date), style: const TextStyle(color: Colors.grey))
-                          ]
-                      )
-                    ],
-                  ),
+                      child:
+                      Text(
+                        '\$ ${userTransactions[index].amount.toStringAsFixed(2)}',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,color: Theme.of(context).primaryColorDark ),
+                      ),
+                    ),
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(userTransactions[index].title,style: Theme.of(context).textTheme.headline1,),
+                          Text(DateFormat('dd-MM-yyyy hh:mm').format(userTransactions[index].date), style: const TextStyle(color: Colors.grey))
+                        ]
+                    )
+                  ],
                 ),
-              )).toList()
-          ,
+              ),
+            );
+          },
+          itemCount: userTransactions.length,
         ),
-      ),
-    );
+      );
   }
 }
