@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:mxscw_expenses_app/widgets/chart.dart';
 import 'package:mxscw_expenses_app/widgets/transaction_list.dart';
 import './widgets/new_transaction.dart';
 import 'models/transaction.dart';
@@ -39,10 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController titleController= TextEditingController();
   final TextEditingController amountController= TextEditingController();
 
-  final List<TransactionModel> _userTransactions = [
-    TransactionModel(id:'0',title: 'New Shoes',amount: 25.26,date:DateTime.now()),
-    TransactionModel(id:'1',title: 'New Hoodie',amount: 45.34,date:DateTime.now().add(const Duration(days: -30)))
-  ];
+  final List<TransactionModel> _userTransactions = [];
 
   _addTransaction(TransactionModel transactionModel){
     transactionModel.id = _userTransactions.length.toString();
@@ -50,7 +48,11 @@ class _MyHomePageState extends State<MyHomePage> {
       _userTransactions.add(transactionModel);
     });
   }
-
+  _deleteTransaction(int index){
+    setState((){
+      _userTransactions.removeAt(index);
+    });
+  }
   void _startAddNewTransaction(BuildContext context){
     showModalBottomSheet(
       context:context,
@@ -81,12 +83,9 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
-              child: Card(
-                child:Text ('Chart placeholder',),
-                elevation: 5,
-              ),
+              child: Chart(_userTransactions.where((t) => DateTime.now().difference(t.date).inDays < 7).toList(),),
             ),
-            TransactionList(userTransactions: _userTransactions)
+            TransactionList(userTransactions: _userTransactions,deleteTransaction: _deleteTransaction,)
           ],
         ),
       ),

@@ -1,7 +1,7 @@
 class TransactionModel {
   String id;
   final String title;
-  final double amount;
+  double amount;
   final DateTime date;
   TransactionModel({required this.id,required this.title,required this.amount,required this.date});
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mxscw_expenses_app/models/transaction.dart';
 
 class NewTransaction extends StatefulWidget {
@@ -14,8 +15,13 @@ class _NewTransactionState extends State<NewTransaction> {
   final TextEditingController titleController= TextEditingController();
 
   final TextEditingController amountController= TextEditingController();
+  DateTime inputDate = DateTime.now();
+  _presentDatePicker(){
+    showDatePicker(context: context, initialDate: DateTime.now(), firstDate: DateTime(2000),lastDate: DateTime.now()).then((value) => {if(value != null) inputDate = value});
 
-  submitData(){
+  }
+
+  _submitData(){
     final inputTitle =titleController.text;
     final inputAmount = double.tryParse(amountController.text);
     if(inputAmount == null || inputAmount <=0){
@@ -27,7 +33,7 @@ class _NewTransactionState extends State<NewTransaction> {
             id: 'id',
             title: inputTitle,
             amount:  inputAmount,
-            date: DateTime.now()
+            date: inputDate
         )
     );
     Navigator.of(context).pop();
@@ -45,13 +51,26 @@ class _NewTransactionState extends State<NewTransaction> {
             TextField(
               decoration: InputDecoration(labelText: 'Title'),
               controller: titleController,
-              onSubmitted: (_)=> submitData(),),
+              onSubmitted: (_)=> _submitData(),),
             TextField(
               decoration: InputDecoration(labelText: 'Amount'),
               controller: amountController,
               keyboardType: TextInputType.number,
-              onSubmitted: (_)=> submitData(),),
-            TextButton(onPressed: submitData, child: Text('Add Transaction'),),
+              onSubmitted: (_)=> _submitData(),),
+            SizedBox(
+              height: 64,
+              child: Row(
+                children: [
+                  Text('Date: ',),
+                  Text(DateFormat('dd-MM-yyyy hh:mm').format(inputDate), style: TextStyle(fontWeight: FontWeight.bold,)),
+                  TextButton(
+                    child: Text('Choose date',style: TextStyle(fontWeight: FontWeight.bold,)),
+                    onPressed: _presentDatePicker,
+                  )
+                ],
+              ),
+            ),
+            ElevatedButton(onPressed: _submitData, child: Text('Add Transaction'),),
           ],
         ),
       ),

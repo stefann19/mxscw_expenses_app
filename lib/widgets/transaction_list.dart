@@ -2,15 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../models/transaction.dart';
 
-class TransactionList extends StatelessWidget {
-  TransactionList({Key? key, required this.userTransactions}) : super(key: key);
+class TransactionList extends StatefulWidget {
+  TransactionList({Key? key, required this.userTransactions, required this.deleteTransaction}) : super(key: key);
   List<TransactionModel> userTransactions;
+  final Function(int index) deleteTransaction;
+  @override
+  State<TransactionList> createState() => _TransactionListState();
 
+}
+
+class _TransactionListState extends State<TransactionList> {
   @override
   Widget build(BuildContext context) {
     return Container(
         height: 700,
-        child: ListView.builder(
+        child: widget.userTransactions.isNotEmpty ?
+          ListView.builder(
           itemBuilder: (ctx, index) {
             return Card(
               child: Container(
@@ -26,24 +33,37 @@ class TransactionList extends StatelessWidget {
                       ),
                       child:
                       Text(
-                        '\$ ${userTransactions[index].amount.toStringAsFixed(2)}',
+                        '\$ ${widget.userTransactions[index].amount.toStringAsFixed(2)}',
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,color: Theme.of(context).primaryColorDark ),
                       ),
                     ),
                     Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(userTransactions[index].title,style: Theme.of(context).textTheme.headline1,),
-                          Text(DateFormat('dd-MM-yyyy hh:mm').format(userTransactions[index].date), style: const TextStyle(color: Colors.grey))
+                          Text(widget.userTransactions[index].title,style: Theme.of(context).textTheme.headline1,),
+                          Text(DateFormat('dd-MM-yyyy hh:mm').format(widget.userTransactions[index].date), style: const TextStyle(color: Colors.grey))
                         ]
-                    )
+                    ),
+                    IconButton(onPressed: ()=>widget.deleteTransaction(index), icon: Icon(Icons.delete))
                   ],
                 ),
               ),
             );
           },
-          itemCount: userTransactions.length,
-        ),
+          itemCount: widget.userTransactions.length,
+        ) :
+          Column(
+            children: [
+              Text('No transactions added yet',style: Theme.of(context).textTheme.headline1,),
+              SizedBox(
+                height: 32,
+              ),
+              Container(
+                child: Image.asset('assets/images/waiting.png', fit: BoxFit.cover),
+                height: 256,
+              )
+            ],
+          ),
       );
   }
 }
