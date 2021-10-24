@@ -14,9 +14,7 @@ class TransactionList extends StatefulWidget {
 class _TransactionListState extends State<TransactionList> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: 700,
-        child: widget.userTransactions.isNotEmpty ?
+    return widget.userTransactions.isNotEmpty ?
           ListView.builder(
           itemBuilder: (ctx, index) {
             return Card(
@@ -63,7 +61,6 @@ class _TransactionListState extends State<TransactionList> {
                 height: 256,
               )
             ],
-          ),
       );
   }
 }
